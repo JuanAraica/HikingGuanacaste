@@ -1,5 +1,52 @@
-﻿<h3>EditEmployee</h3>
+﻿@using HikingGuanacaste.Shared
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
 
+<h2>Edit Employee</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="EmpName" class="control-label">Name</label>
+                <input for="EmpName" class="form-group" @bind="@emp.EmpName" />
+            </div>
+            <div class="form-group">
+                <label for="Designation" class="control-label">Designation</label>
+                <input for="Designation" class="form-group" @bind="@emp.Designation" />
+            </div>
+            <div class="form-group">
+                <label for="Department" class="control-label">Department</label>
+                <input for="Department" class="form-group" @bind="@emp.Department" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@UpdateEmployee" value="Update" />
+                <input type="button" class="btn" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
 @code {
 
+    [Parameter]
+    public string id { set; get; }
+    EmployeeInfo emp = new EmployeeInfo();
+
+    protected override async Task OnInitializedAsync() {
+        emp= await Http.GetJsonAsync<EmployeeInfo>("http://localhost:63838/api/EmployeeInfo/"+id);
+    }
+
+    protected async Task UpdateEmployee()
+    {
+        await Http.PostJsonAsync("http://localhost:63838/api/EmployeeInfo/" + id, emp);
+        NavigationManager.NavigateTo("employeeList");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("employeeList");
+    }
 }
