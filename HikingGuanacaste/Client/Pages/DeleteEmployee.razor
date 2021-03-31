@@ -1,0 +1,48 @@
+﻿@page "/deleteemployee/{id}"
+@using HikingGuanacaste.Shared
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h2>Delete</h2>
+<p>Are you sure want to delete this registrer from the employee with id: <b>@id</b></p>
+<br />
+<div class="col-md-4">
+    <table class="table">
+        <tr>
+            <td>Name</td>
+            <td>@emp.EmpName</td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td>@emp.Designation</td>
+        </tr>
+        <tr>
+            <td>Department</td>
+            <td>@emp.Department</td>
+        </tr>
+    </table>
+    <div class="form-group">
+        <input type="button" class="btn btn-primary" value="Delete" @onclick="@Delete" />
+        <input type="button" class="btn" value="Cancel" @onclick="@Cancel" />
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string id { set; get; }
+    EmployeeInfo emp = new EmployeeInfo();
+
+    protected override async Task OnInitializedAsync()
+    {
+        emp = await Http.GetJsonAsync<EmployeeInfo>("http://localhost:63838/api/EmployeeInfo/" + id);
+    }
+
+    protected async Task Delete()
+    {
+        await Http.DeleteAsync("http://localhost:63838/api/EmployeeInfo/" + id);
+        NavigationManager.NavigateTo("employeeList");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("employeeList");
+    }
+}

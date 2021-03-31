@@ -42,7 +42,7 @@
 
     protected async Task UpdateEmployee()
     {
-        await Http.PostJsonAsync("http://localhost:63838/api/EmployeeInfo/" + id, emp);
+        await Http.PutJsonAsync("http://localhost:63838/api/EmployeeInfo/" + id, emp);
         NavigationManager.NavigateTo("employeeList");
     }
     void Cancel()
